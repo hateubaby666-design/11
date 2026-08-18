@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>圖床管理員 2.2 - 整合新增資料夾</title>
+<title>圖床管理員 2.3 - 完整資料夾支援</title>
+
 <style>
   * { box-sizing: border-box; }
 
@@ -65,7 +66,8 @@
     font-size: 18px;
   }
 
-  .token-row, .folder-row {
+  .token-row,
+  .folder-row {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
@@ -84,7 +86,8 @@
     transition: .2s;
   }
 
-  input:focus, select:focus {
+  input:focus,
+  select:focus {
     border-color: #8b5cf6;
     box-shadow: 0 0 0 3px rgba(139, 92, 246, .12);
   }
@@ -103,13 +106,33 @@
     transform: translateY(-1px);
   }
 
-  .primary { background: #7c3aed; color: white; }
-  .secondary { background: #f0ebfa; color: #6334b5; }
-  .danger { background: #fee2e2; color: #b91c1c; }
-  .success { background: #dcfce7; color: #166534; }
-  .dark { background: #29243a; color: white; }
+  .primary {
+    background: #7c3aed;
+    color: white;
+  }
 
-  .token-note, .help {
+  .secondary {
+    background: #f0ebfa;
+    color: #6334b5;
+  }
+
+  .danger {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .success {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .dark {
+    background: #29243a;
+    color: white;
+  }
+
+  .token-note,
+  .help {
     color: #7b7288;
     font-size: 12px;
     margin-top: 9px;
@@ -126,18 +149,36 @@
     transition: .2s;
   }
 
-  .drop-zone:hover, .drop-zone.dragover {
+  .drop-zone:hover,
+  .drop-zone.dragover {
     background: #f3edff;
     border-color: #7c3aed;
   }
 
-  .drop-icon { font-size: 38px; margin-bottom: 8px; }
-  .drop-zone strong { display: block; margin-bottom: 6px; }
-  .drop-zone span { color: #81778e; font-size: 13px; }
+  .drop-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+  }
 
-  #fileInput { display: none; }
+  .drop-zone strong {
+    display: block;
+    margin-bottom: 6px;
+  }
 
-  .upload-list { margin-top: 15px; display: none; }
+  .drop-zone span {
+    color: #81778e;
+    font-size: 13px;
+  }
+
+  #fileInput {
+    display: none;
+  }
+
+  .upload-list {
+    margin-top: 15px;
+    display: none;
+  }
+
   .upload-item {
     border: 1px solid #ebe6f2;
     border-radius: 10px;
@@ -145,12 +186,35 @@
     margin-top: 8px;
     font-size: 13px;
   }
-  .upload-item-top { display: flex; justify-content: space-between; gap: 10px; }
-  .upload-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .status { flex-shrink: 0; font-size: 12px; }
-  .status.success { color: #16a34a; }
-  .status.error { color: #dc2626; }
-  .status.loading { color: #7c3aed; }
+
+  .upload-item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .upload-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status {
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .status.success {
+    color: #16a34a;
+  }
+
+  .status.error {
+    color: #dc2626;
+  }
+
+  .status.loading {
+    color: #7c3aed;
+  }
 
   .progress {
     height: 5px;
@@ -159,6 +223,7 @@
     overflow: hidden;
     margin-top: 8px;
   }
+
   .progress-bar {
     height: 100%;
     width: 0%;
@@ -173,7 +238,12 @@
     gap: 10px;
     flex-wrap: wrap;
   }
-  .count { color: #8a8195; font-size: 13px; margin-left: 6px; }
+
+  .count {
+    color: #8a8195;
+    font-size: 13px;
+    margin-left: 6px;
+  }
 
   .filter-row {
     display: flex;
@@ -182,6 +252,7 @@
     margin-bottom: 12px;
     flex-wrap: wrap;
   }
+
   .filter-row label {
     font-size: 13px;
     color: #655c70;
@@ -189,12 +260,17 @@
     align-items: center;
     gap: 6px;
   }
+
   .filter-row select {
     flex: 0 1 auto;
     min-width: 150px;
   }
 
-  .empty { text-align: center; color: #8a8195; padding: 45px 20px; }
+  .empty {
+    text-align: center;
+    color: #8a8195;
+    padding: 45px 20px;
+  }
 
   .file-grid {
     display: grid;
@@ -229,11 +305,24 @@
     overflow: hidden;
   }
 
-  .preview img { width: 100%; height: 100%; object-fit: contain; }
-  .audio-preview { width: 90%; }
-  .audio-icon { font-size: 45px; }
+  .preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
-  .file-info { padding: 14px; }
+  .audio-preview {
+    width: 90%;
+  }
+
+  .audio-icon {
+    font-size: 45px;
+  }
+
+  .file-info {
+    padding: 14px;
+  }
+
   .file-name {
     font-size: 14px;
     font-weight: 600;
@@ -242,6 +331,7 @@
     white-space: nowrap;
     margin-bottom: 10px;
   }
+
   .file-path {
     font-size: 11px;
     color: #8a8195;
@@ -249,12 +339,34 @@
     word-break: break-all;
   }
 
-  .url-row { display: flex; gap: 6px; margin-bottom: 9px; }
-  .url-row input { font-size: 11px; padding: 8px; }
-  .copy-btn { padding: 8px 10px; background: #ede9fe; color: #6d28d9; }
+  .url-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 9px;
+  }
 
-  .actions { display: flex; gap: 7px; flex-wrap: wrap; }
-  .actions button { flex: 1; padding: 8px 9px; font-size: 12px; }
+  .url-row input {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .copy-btn {
+    padding: 8px 10px;
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .actions {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+  }
+
+  .actions button {
+    flex: 1;
+    padding: 8px 9px;
+    font-size: 12px;
+  }
 
   .info-box {
     background: #faf8ff;
@@ -288,19 +400,43 @@
     animation: toastIn .25s ease;
   }
 
-  .toast.success { background: #15803d; }
-  .toast.error { background: #b91c1c; }
+  .toast.success {
+    background: #15803d;
+  }
+
+  .toast.error {
+    background: #b91c1c;
+  }
 
   @keyframes toastIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (max-width: 600px) {
-    .header h1 { font-size: 23px; }
-    .token-row, .folder-row { flex-direction: column; }
-    .library-header { align-items: flex-start; }
-    .file-grid { grid-template-columns: 1fr; }
+    .header h1 {
+      font-size: 23px;
+    }
+
+    .token-row,
+    .folder-row {
+      flex-direction: column;
+    }
+
+    .library-header {
+      align-items: flex-start;
+    }
+
+    .file-grid {
+      grid-template-columns: 1fr;
+    }
   }
 
   .folder-badge {
@@ -322,6 +458,7 @@
     flex-wrap: wrap;
     align-items: center;
   }
+
   .move-section select {
     padding: 8px 12px;
     border-radius: 8px;
@@ -329,21 +466,25 @@
     font-size: 13px;
     background: white;
   }
+
   .move-section .selected-count {
     font-size: 13px;
     color: #655c70;
   }
 
-  /* 彈窗樣式 */
   .modal-overlay {
     position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background: rgba(0,0,0,0.5);
     display: none;
     justify-content: center;
     align-items: center;
     z-index: 999;
   }
+
   .modal-content {
     background: white;
     padding: 28px;
@@ -352,10 +493,12 @@
     width: 90%;
     box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   }
+
   .modal-content h3 {
     margin-top: 0;
     margin-bottom: 12px;
   }
+
   .modal-content input {
     width: 100%;
     padding: 10px;
@@ -364,22 +507,25 @@
     font-size: 14px;
     margin-bottom: 12px;
   }
+
   .modal-content .modal-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
   }
+
   .modal-content .modal-actions button {
     flex: 1;
   }
 </style>
 </head>
+
 <body>
 
 <header class="header">
   <div class="header-inner">
-    <h1>📁 圖床管理員 2.2</h1>
-    <p id="repoInfo">整合新增資料夾 · 檔案管理</p>
+    <h1>📁 圖床管理員 2.3</h1>
+    <p id="repoInfo">GitHub 圖床 · 完整資料夾支援</p>
   </div>
 </header>
 
@@ -387,622 +533,2500 @@
 
   <!-- Token -->
   <section class="card">
-    <div class="section-title"><h2>🔑 GitHub Token</h2></div>
-    <div class="token-row">
-      <input id="tokenInput" type="password" placeholder="輸入 GitHub Personal Access Token" autocomplete="off">
-      <button class="primary" onclick="saveToken()">儲存 Token</button>
+    <div class="section-title">
+      <h2>🔑 GitHub Token</h2>
     </div>
-    <div class="token-note">Token 只儲存在瀏覽器 localStorage。</div>
+
+    <div class="token-row">
+      <input
+        id="tokenInput"
+        type="password"
+        placeholder="輸入 GitHub Personal Access Token"
+        autocomplete="off"
+      >
+
+      <button class="primary" onclick="saveToken()">
+        儲存 Token
+      </button>
+    </div>
+
+    <div class="token-note">
+      Token 只儲存在瀏覽器 localStorage。
+    </div>
   </section>
 
-  <!-- 上傳 + 資料夾整合 -->
+
+  <!-- 上傳 + 資料夾 -->
   <section class="card">
-    <div class="section-title"><h2>📤 上傳檔案</h2></div>
+
+    <div class="section-title">
+      <h2>📤 上傳檔案</h2>
+    </div>
+
     <div class="folder-row" style="margin-bottom:12px;">
-      <label style="font-size:13px; color:#655c70; display:flex; align-items:center; gap:6px; flex:1;">
+
+      <label style="
+        font-size:13px;
+        color:#655c70;
+        display:flex;
+        align-items:center;
+        gap:6px;
+        flex:1;
+      ">
+
         上傳到資料夾：
-        <select id="uploadFolderSelect" style="flex:1; padding:8px; border-radius:8px; border:1px solid #ddd6e8;">
+
+        <select
+          id="uploadFolderSelect"
+          style="
+            flex:1;
+            padding:8px;
+            border-radius:8px;
+            border:1px solid #ddd6e8;
+          "
+        >
           <option value="">（根目錄）</option>
         </select>
+
       </label>
-      <button class="primary" onclick="showCreateFolderModal()">＋ 新增資料夾</button>
+
+      <button
+        class="primary"
+        onclick="showCreateFolderModal()"
+      >
+        ＋ 新增資料夾
+      </button>
+
     </div>
-    <div id="dropZone" class="drop-zone" onclick="document.getElementById('fileInput').click()">
+
+
+    <div
+      id="dropZone"
+      class="drop-zone"
+      onclick="document.getElementById('fileInput').click()"
+    >
+
       <div class="drop-icon">📁</div>
-      <strong>點擊選擇檔案，或直接拖曳到這裡</strong>
-      <span>支援多選 · 圖片 & 音訊</span>
+
+      <strong>
+        點擊選擇檔案，或直接拖曳到這裡
+      </strong>
+
+      <span>
+        支援多選 · 圖片 & 音訊
+      </span>
+
     </div>
-    <input id="fileInput" type="file" multiple accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.ico,.mp3,.wav,.m4a,.ogg,.flac,.aac">
-    <div id="uploadList" class="upload-list"></div>
+
+
+    <input
+      id="fileInput"
+      type="file"
+      multiple
+      accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.ico,.mp3,.wav,.m4a,.ogg,.flac,.aac"
+    >
+
+    <div
+      id="uploadList"
+      class="upload-list"
+    ></div>
+
   </section>
+
 
   <!-- 圖庫 -->
   <section class="card">
+
     <div class="section-title library-header">
-      <h2>🗂️ 我的圖庫 <span id="fileCount" class="count">0 個檔案</span></h2>
+
+      <h2>
+        🗂️ 我的圖庫
+        <span id="fileCount" class="count">
+          0 個檔案
+        </span>
+      </h2>
+
       <div style="display:flex; gap:6px;">
-        <button class="secondary" onclick="toggleSelectAll()">☑ 全選</button>
-        <button class="secondary" onclick="loadFiles()">↻ 重新整理</button>
+
+        <button
+          class="secondary"
+          onclick="toggleSelectAll()"
+        >
+          ☑ 全選
+        </button>
+
+        <button
+          class="secondary"
+          onclick="loadFiles()"
+        >
+          ↻ 重新整理
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="filter-row">
+
+      <label>
+
+        📂 顯示：
+
+        <select
+          id="filterSelect"
+          onchange="applyFilter()"
+        >
+          <option value="">所有檔案</option>
+        </select>
+
+      </label>
+
+      <span
+        id="filterCount"
+        style="font-size:13px; color:#8a8195;"
+      ></span>
+
+    </div>
+
+
+    <div
+      id="batchMoveArea"
+      style="display:none; margin-bottom:12px;"
+      class="move-section"
+    >
+
+      <span
+        class="selected-count"
+        id="selectedCount"
+      >
+        已選 0 個檔案
+      </span>
+
+      <select id="batchMoveTarget">
+        <option value="">（移至根目錄）</option>
+      </select>
+
+      <button
+        class="primary"
+        onclick="batchMoveFiles()"
+      >
+        📦 移動所選檔案
+      </button>
+
+      <button
+        class="secondary"
+        onclick="clearSelection()"
+      >
+        取消選取
+      </button>
+
+    </div>
+
+
+    <div id="library">
+      <div class="empty">
+        尚未載入檔案
       </div>
     </div>
 
-    <div class="filter-row">
-      <label>
-        📂 顯示：
-        <select id="filterSelect" onchange="applyFilter()">
-          <option value="">所有檔案</option>
-        </select>
-      </label>
-      <span id="filterCount" style="font-size:13px; color:#8a8195;"></span>
-    </div>
-
-    <div id="batchMoveArea" style="display:none; margin-bottom:12px;" class="move-section">
-      <span class="selected-count" id="selectedCount">已選 0 個檔案</span>
-      <select id="batchMoveTarget"><option value="">（移至根目錄）</option></select>
-      <button class="primary" onclick="batchMoveFiles()">📦 移動所選檔案</button>
-      <button class="secondary" onclick="clearSelection()">取消選取</button>
-    </div>
-
-    <div id="library"><div class="empty">尚未載入檔案</div></div>
   </section>
+
 
   <!-- 說明 -->
   <section class="card">
-    <div class="section-title"><h2>💡 使用說明</h2></div>
-    <div class="info-box">
-      <strong>📂 新增資料夾</strong><br>
-      點「＋ 新增資料夾」→ 輸入名稱 → 選擇一張圖片 → 自動建立並上傳。<br><br>
-      <strong>🔗 外鏈格式</strong><br>
-      使用 jsDelivr CDN：<br>
-      <code>https://cdn.jsdelivr.net/gh/hateubaby666-design/11@main/資料夾/檔案名</code>
+
+    <div class="section-title">
+      <h2>💡 使用說明</h2>
     </div>
+
+    <div class="info-box">
+
+      <strong>📂 新增資料夾</strong>
+      <br>
+
+      點「＋ 新增資料夾」
+      → 輸入名稱
+      → 選擇一張圖片
+      → 自動建立資料夾並上傳。
+
+      <br><br>
+
+      <strong>🗂️ 資料夾圖片</strong>
+      <br>
+
+      現在會自動掃描 GitHub 裡的所有資料夾，
+      包含多層資料夾。
+
+      <br><br>
+
+      <strong>🔗 外鏈格式</strong>
+      <br>
+
+      使用 jsDelivr CDN：
+
+      <br>
+
+      <code>
+        https://cdn.jsdelivr.net/gh/hateubaby666-design/11@main/資料夾/檔案名
+      </code>
+
+    </div>
+
   </section>
 
 </main>
 
-<!-- 彈窗 -->
-<div id="createFolderModal" class="modal-overlay">
+
+<!-- 新增資料夾彈窗 -->
+<div
+  id="createFolderModal"
+  class="modal-overlay"
+>
+
   <div class="modal-content">
-    <h3>📂 新增資料夾</h3>
-    <input id="modalFolderName" type="text" placeholder="輸入資料夾名稱，例如 avatar">
+
+    <h3>
+      📂 新增資料夾
+    </h3>
+
+    <input
+      id="modalFolderName"
+      type="text"
+      placeholder="輸入資料夾名稱，例如 avatar"
+    >
+
+
     <div style="margin-bottom:12px;">
-      <button class="secondary" onclick="document.getElementById('modalFileInput').click()" style="width:100%;">選擇要上傳的圖片</button>
-      <input id="modalFileInput" type="file" accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.ico" style="display:none;">
-      <span id="modalFileSelected" style="font-size:12px; color:#8a8195; display:block; margin-top:4px;"></span>
+
+      <button
+        class="secondary"
+        onclick="document.getElementById('modalFileInput').click()"
+        style="width:100%;"
+      >
+        選擇要上傳的圖片
+      </button>
+
+      <input
+        id="modalFileInput"
+        type="file"
+        accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.ico"
+        style="display:none;"
+      >
+
+      <span
+        id="modalFileSelected"
+        style="
+          font-size:12px;
+          color:#8a8195;
+          display:block;
+          margin-top:4px;
+        "
+      ></span>
+
     </div>
+
+
     <div class="modal-actions">
-      <button class="secondary" onclick="closeModal()">取消</button>
-      <button class="primary" onclick="createFolderWithImage()">建立並上傳</button>
+
+      <button
+        class="secondary"
+        onclick="closeModal()"
+      >
+        取消
+      </button>
+
+      <button
+        class="primary"
+        onclick="createFolderWithImage()"
+      >
+        建立並上傳
+      </button>
+
     </div>
+
   </div>
+
 </div>
 
-<div id="toastContainer" class="toast-container"></div>
+
+<div
+  id="toastContainer"
+  class="toast-container"
+></div>
+
 
 <script>
+
 /* =========================================================
    設定
    ========================================================= */
+
 const GITHUB_USERNAME = "hateubaby666-design";
 const GITHUB_REPOSITORY = "11";
 const GITHUB_BRANCH = "main";
 
-const API_BASE = `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/contents`;
-const CDN_BASE = `https://cdn.jsdelivr.net/gh/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}@main/`;
+const API_BASE =
+  `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/contents`;
 
-const TOKEN_STORAGE_KEY = "github_image_host_token";
+const CDN_BASE =
+  `https://cdn.jsdelivr.net/gh/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}@main/`;
 
-const IMAGE_EXTENSIONS = ["jpg","jpeg","png","gif","webp","svg","bmp","ico"];
-const AUDIO_EXTENSIONS = ["mp3","wav","m4a","ogg","flac","aac"];
-const ALLOWED_EXTENSIONS = [...IMAGE_EXTENSIONS, ...AUDIO_EXTENSIONS];
+const TOKEN_STORAGE_KEY =
+  "github_image_host_token";
+
+
+const IMAGE_EXTENSIONS = [
+  "jpg",
+  "jpeg",
+  "png",
+  "gif",
+  "webp",
+  "svg",
+  "bmp",
+  "ico"
+];
+
+const AUDIO_EXTENSIONS = [
+  "mp3",
+  "wav",
+  "m4a",
+  "ogg",
+  "flac",
+  "aac"
+];
+
+const ALLOWED_EXTENSIONS = [
+  ...IMAGE_EXTENSIONS,
+  ...AUDIO_EXTENSIONS
+];
+
 
 let modalFile = null;
+
 let allFiles = [];
+
 let selectedFiles = new Set();
+
 
 /* =========================================================
    初始化
    ========================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
-  document.getElementById("repoInfo").textContent = `${GITHUB_USERNAME} / ${GITHUB_REPOSITORY}`;
-  const saved = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+  document.getElementById("repoInfo").textContent =
+    `${GITHUB_USERNAME} / ${GITHUB_REPOSITORY} · main`;
+
+  const saved =
+    localStorage.getItem(TOKEN_STORAGE_KEY);
+
   if (saved) {
-    document.getElementById("tokenInput").value = saved;
+
+    document.getElementById("tokenInput").value =
+      saved;
+
     loadFiles();
+
   }
+
+
   setupDragAndDrop();
-  document.getElementById("fileInput").addEventListener("change", e => {
-    handleFiles(Array.from(e.target.files));
-    e.target.value = "";
-  });
-  document.getElementById("modalFileInput").addEventListener("change", e => {
-    if (e.target.files.length) {
-      modalFile = e.target.files[0];
-      document.getElementById("modalFileSelected").textContent = `✅ 已選：${modalFile.name}`;
-    }
-  });
+
+
+  document
+    .getElementById("fileInput")
+    .addEventListener("change", e => {
+
+      handleFiles(
+        Array.from(e.target.files)
+      );
+
+      e.target.value = "";
+
+    });
+
+
+  document
+    .getElementById("modalFileInput")
+    .addEventListener("change", e => {
+
+      if (e.target.files.length) {
+
+        modalFile =
+          e.target.files[0];
+
+        document
+          .getElementById("modalFileSelected")
+          .textContent =
+          `✅ 已選：${modalFile.name}`;
+
+      }
+
+    });
+
 });
+
 
 /* =========================================================
    Toast
    ========================================================= */
+
 function showToast(msg, type = "") {
-  const c = document.getElementById("toastContainer");
-  const t = document.createElement("div");
-  t.className = `toast ${type}`;
-  t.textContent = msg;
+
+  const c =
+    document.getElementById("toastContainer");
+
+  const t =
+    document.createElement("div");
+
+  t.className =
+    `toast ${type}`;
+
+  t.textContent =
+    msg;
+
   c.appendChild(t);
-  setTimeout(() => { t.style.opacity = "0"; t.style.transform = "translateY(10px)"; setTimeout(() => t.remove(), 250); }, 3000);
+
+
+  setTimeout(() => {
+
+    t.style.opacity = "0";
+
+    t.style.transform =
+      "translateY(10px)";
+
+    setTimeout(
+      () => t.remove(),
+      250
+    );
+
+  }, 3000);
+
 }
+
 
 /* =========================================================
    Token
    ========================================================= */
+
 function getToken() {
-  return localStorage.getItem(TOKEN_STORAGE_KEY) || document.getElementById("tokenInput").value.trim();
+
+  return (
+    localStorage.getItem(TOKEN_STORAGE_KEY) ||
+    document.getElementById("tokenInput").value.trim()
+  );
+
 }
+
+
 function saveToken() {
-  const t = document.getElementById("tokenInput").value.trim();
-  if (!t) { showToast("請輸入 Token", "error"); return; }
-  localStorage.setItem(TOKEN_STORAGE_KEY, t);
-  showToast("Token 已儲存", "success");
+
+  const t =
+    document.getElementById("tokenInput").value.trim();
+
+  if (!t) {
+
+    showToast(
+      "請輸入 Token",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+    TOKEN_STORAGE_KEY,
+    t
+  );
+
+
+  showToast(
+    "Token 已儲存",
+    "success"
+  );
+
+
   loadFiles();
+
 }
+
 
 /* =========================================================
    GitHub API
    ========================================================= */
+
 function headers() {
+
   const t = getToken();
-  if (!t) throw new Error("尚未設定 Token");
-  return { "Authorization": `Bearer ${t}`, "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" };
+
+  if (!t) {
+    throw new Error("尚未設定 Token");
+  }
+
+
+  return {
+
+    "Authorization":
+      `Bearer ${t}`,
+
+    "Accept":
+      "application/vnd.github+json",
+
+    "X-GitHub-Api-Version":
+      "2022-11-28"
+
+  };
+
 }
+
 
 async function ghReq(url, options = {}) {
-  const r = await fetch(url, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
+
+  const r =
+    await fetch(url, {
+
+      ...options,
+
+      headers: {
+        ...headers(),
+        ...(options.headers || {})
+      }
+
+    });
+
+
   let data = null;
-  try { data = await r.json(); } catch {}
-  if (!r.ok) throw new Error(data?.message || `API 錯誤 (${r.status})`);
-  return data;
-}
-
-function encodePath(p) { return p.split("/").map(encodeURIComponent).join("/"); }
-
-/* =========================================================
-   讀取圖庫
-   ========================================================= */
-async function loadFiles() {
-  const token = getToken();
-  if (!token) { showToast("請先設定 Token", "error"); return; }
-
-  const lib = document.getElementById("library");
-  lib.innerHTML = `<div class="empty">⏳ 載入中...</div>`;
 
   try {
-    const data = await ghReq(`${API_BASE}?ref=${encodeURIComponent(GITHUB_BRANCH)}`);
-    allFiles = Array.isArray(data) ? data.filter(item => item.type === "file") : [];
+    data = await r.json();
+  } catch {}
 
-    const folders = getFolderList(allFiles);
+
+  if (!r.ok) {
+
+    throw new Error(
+      data?.message ||
+      `API 錯誤 (${r.status})`
+    );
+
+  }
+
+
+  return data;
+
+}
+
+
+/* =========================================================
+   路徑編碼
+   ========================================================= */
+
+function encodePath(p) {
+
+  return p
+    .split("/")
+    .map(encodeURIComponent)
+    .join("/");
+
+}
+
+
+/* =========================================================
+   ⭐ 讀取全部 GitHub 檔案
+   ⭐ 支援任意層級資料夾
+   ========================================================= */
+
+async function getAllGitHubFiles(path = "") {
+
+  const url = path
+    ? `${API_BASE}/${encodePath(path)}?ref=${encodeURIComponent(GITHUB_BRANCH)}`
+    : `${API_BASE}?ref=${encodeURIComponent(GITHUB_BRANCH)}`;
+
+
+  const data =
+    await ghReq(url);
+
+
+  if (!Array.isArray(data)) {
+    return [];
+  }
+
+
+  const files = [];
+
+
+  for (const item of data) {
+
+
+    /* -------------------------
+       普通檔案
+       ------------------------- */
+
+    if (item.type === "file") {
+
+      /*
+       * .keep 是用來保留空資料夾的，
+       * 不應該顯示在圖庫。
+       */
+
+      if (item.name === ".keep") {
+        continue;
+      }
+
+
+      const ext =
+        getExtension(item.name);
+
+
+      /*
+       * 只加入支援的圖片與音訊。
+       */
+
+      if (
+        ALLOWED_EXTENSIONS.includes(ext)
+      ) {
+
+        files.push(item);
+
+      }
+
+
+      continue;
+
+    }
+
+
+    /* -------------------------
+       資料夾
+       ------------------------- */
+
+    if (item.type === "dir") {
+
+      /*
+       * 遞迴進入資料夾。
+       *
+       * 例如：
+       *
+       * avatar/
+       *   ↓
+       * avatar/a.jpg
+       *
+       * character/
+       *   ↓
+       * character/male/
+       *   ↓
+       * character/male/a.jpg
+       */
+
+      try {
+
+        const nestedFiles =
+          await getAllGitHubFiles(item.path);
+
+        files.push(...nestedFiles);
+
+      } catch (e) {
+
+        console.warn(
+          `無法讀取資料夾 ${item.path}`,
+          e
+        );
+
+      }
+
+    }
+
+  }
+
+
+  return files;
+
+}
+
+
+/* =========================================================
+   ⭐ 讀取圖庫
+   ========================================================= */
+
+async function loadFiles() {
+
+  const token = getToken();
+
+
+  if (!token) {
+
+    showToast(
+      "請先設定 Token",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const lib =
+    document.getElementById("library");
+
+
+  lib.innerHTML = `
+    <div class="empty">
+      ⏳ 正在掃描 GitHub 所有資料夾...
+    </div>
+  `;
+
+
+  try {
+
+    /*
+     * 這裡已經不是只讀根目錄。
+     *
+     * getAllGitHubFiles("")
+     * 會遞迴掃描整個 Repository。
+     */
+
+    allFiles =
+      await getAllGitHubFiles("");
+
+
+    const folders =
+      getFolderList(allFiles);
+
+
     updateFolderSelects(folders);
+
     updateFilterSelect(folders);
 
+
     applyFilter();
+
     clearSelection();
+
+
+    showToast(
+      `已載入 ${allFiles.length} 個檔案`,
+      "success"
+    );
+
+
   } catch (e) {
-    lib.innerHTML = `<div class="empty">❌ 載入失敗<br><small>${e.message}</small></div>`;
-    showToast(`載入失敗：${e.message}`, "error");
+
+    console.error(e);
+
+
+    lib.innerHTML = `
+      <div class="empty">
+        ❌ 載入失敗
+        <br>
+        <small>${e.message}</small>
+      </div>
+    `;
+
+
+    showToast(
+      `載入失敗：${e.message}`,
+      "error"
+    );
+
   }
+
 }
+
+
+/* =========================================================
+   取得資料夾清單
+   ========================================================= */
 
 function getFolderList(files) {
-  const set = new Set();
+
+  const set =
+    new Set();
+
+
   files.forEach(f => {
-    const parts = f.path.split("/");
-    if (parts.length > 1) set.add(parts.slice(0, -1).join("/"));
+
+    const parts =
+      f.path.split("/");
+
+
+    /*
+     * 例如：
+     *
+     * avatar/a.jpg
+     * → avatar
+     *
+     * character/male/a.jpg
+     * → character
+     * → character/male
+     */
+
+    if (parts.length > 1) {
+
+      for (
+        let i = 1;
+        i < parts.length;
+        i++
+      ) {
+
+        set.add(
+          parts
+            .slice(0, i)
+            .join("/")
+        );
+
+      }
+
+    }
+
   });
-  return Array.from(set).sort();
+
+
+  return Array
+    .from(set)
+    .sort();
+
 }
+
+
+/* =========================================================
+   更新資料夾選單
+   ========================================================= */
 
 function updateFolderSelects(folders) {
-  const selects = ["uploadFolderSelect", "batchMoveTarget"];
+
+  const selects = [
+    "uploadFolderSelect",
+    "batchMoveTarget"
+  ];
+
+
   selects.forEach(id => {
-    const sel = document.getElementById(id);
-    if (!sel) return;
-    const current = sel.value;
-    sel.innerHTML = `<option value="">（根目錄）</option>`;
+
+    const sel =
+      document.getElementById(id);
+
+
+    if (!sel) {
+      return;
+    }
+
+
+    const current =
+      sel.value;
+
+
+    sel.innerHTML =
+      `<option value="">（根目錄）</option>`;
+
+
     folders.forEach(f => {
-      const opt = document.createElement("option");
+
+      const opt =
+        document.createElement("option");
+
       opt.value = f;
+
       opt.textContent = f;
+
       sel.appendChild(opt);
+
     });
-    sel.value = current;
+
+
+    /*
+     * 如果原本選擇的資料夾還存在，
+     * 保留原本選擇。
+     */
+
+    if (
+      folders.includes(current)
+    ) {
+
+      sel.value = current;
+
+    } else {
+
+      sel.value = "";
+
+    }
+
   });
+
 }
 
+
+/* =========================================================
+   更新篩選選單
+   ========================================================= */
+
 function updateFilterSelect(folders) {
-  const sel = document.getElementById("filterSelect");
-  const current = sel.value;
-  sel.innerHTML = `<option value="">所有檔案</option>`;
+
+  const sel =
+    document.getElementById("filterSelect");
+
+
+  const current =
+    sel.value;
+
+
+  sel.innerHTML =
+    `<option value="">所有檔案</option>`;
+
+
   folders.forEach(f => {
-    const opt = document.createElement("option");
+
+    const opt =
+      document.createElement("option");
+
     opt.value = f;
+
     opt.textContent = f;
+
     sel.appendChild(opt);
+
   });
-  sel.value = current;
+
+
+  if (
+    folders.includes(current)
+  ) {
+
+    sel.value = current;
+
+  } else {
+
+    sel.value = "";
+
+  }
+
 }
+
 
 /* =========================================================
    篩選
    ========================================================= */
+
 function applyFilter() {
-  const filter = document.getElementById("filterSelect").value;
-  const filtered = filter ? allFiles.filter(f => f.path.startsWith(filter + "/")) : allFiles;
 
-  document.getElementById("fileCount").textContent = `${allFiles.length} 個檔案`;
-  document.getElementById("filterCount").textContent = filter ? `（顯示 ${filtered.length} 個）` : "";
+  const filter =
+    document.getElementById("filterSelect").value;
 
-  const lib = document.getElementById("library");
+
+  const filtered =
+    filter
+      ? allFiles.filter(
+          f =>
+            f.path === filter ||
+            f.path.startsWith(filter + "/")
+        )
+      : allFiles;
+
+
+  document.getElementById("fileCount").textContent =
+    `${allFiles.length} 個檔案`;
+
+
+  document.getElementById("filterCount").textContent =
+    filter
+      ? `（顯示 ${filtered.length} 個）`
+      : "";
+
+
+  const lib =
+    document.getElementById("library");
+
+
   if (!filtered.length) {
-    lib.innerHTML = `<div class="empty">📭 沒有符合的檔案</div>`;
+
+    lib.innerHTML = `
+      <div class="empty">
+        📭 沒有符合的檔案
+      </div>
+    `;
+
     return;
+
   }
 
+
   lib.innerHTML = "";
-  const grid = document.createElement("div");
-  grid.className = "file-grid";
-  filtered.forEach(f => grid.appendChild(createFileCard(f)));
+
+
+  const grid =
+    document.createElement("div");
+
+  grid.className =
+    "file-grid";
+
+
+  filtered.forEach(f => {
+
+    grid.appendChild(
+      createFileCard(f)
+    );
+
+  });
+
+
   lib.appendChild(grid);
+
+
   clearSelection();
+
 }
+
 
 /* =========================================================
    建立檔案卡片
    ========================================================= */
+
 function createFileCard(file) {
-  const card = document.createElement("div");
-  card.className = "file-card";
-  card.dataset.path = file.path;
 
-  const ext = getExtension(file.name);
-  const isImage = IMAGE_EXTENSIONS.includes(ext);
-  const isAudio = AUDIO_EXTENSIONS.includes(ext);
-  const url = CDN_BASE + encodePath(file.path);
+  const card =
+    document.createElement("div");
 
-  const cb = document.createElement("input");
-  cb.type = "checkbox";
-  cb.className = "checkbox";
+
+  card.className =
+    "file-card";
+
+
+  card.dataset.path =
+    file.path;
+
+
+  const ext =
+    getExtension(file.name);
+
+
+  const isImage =
+    IMAGE_EXTENSIONS.includes(ext);
+
+
+  const isAudio =
+    AUDIO_EXTENSIONS.includes(ext);
+
+
+  /*
+   * ⭐ 這裡會直接使用完整 path。
+   *
+   * 根目錄：
+   * 001.jpg
+   *
+   * 資料夾：
+   * avatar/001.jpg
+   *
+   * 多層：
+   * character/male/001.jpg
+   */
+
+  const url =
+    CDN_BASE +
+    encodePath(file.path);
+
+
+  /* Checkbox */
+
+  const cb =
+    document.createElement("input");
+
+  cb.type =
+    "checkbox";
+
+  cb.className =
+    "checkbox";
+
+
   cb.onchange = () => {
-    if (cb.checked) selectedFiles.add(file.path);
-    else selectedFiles.delete(file.path);
+
+    if (cb.checked) {
+
+      selectedFiles.add(
+        file.path
+      );
+
+    } else {
+
+      selectedFiles.delete(
+        file.path
+      );
+
+    }
+
+
     updateBatchMoveUI();
+
   };
+
+
   card.appendChild(cb);
 
-  const preview = document.createElement("div");
-  preview.className = "preview";
+
+  /* Preview */
+
+  const preview =
+    document.createElement("div");
+
+  preview.className =
+    "preview";
+
+
   if (isImage) {
-    const img = document.createElement("img");
-    img.src = url;
-    img.alt = file.name;
-    img.loading = "lazy";
-    img.onerror = () => { preview.innerHTML = `<div class="audio-icon">🖼️</div>`; };
+
+    const img =
+      document.createElement("img");
+
+
+    img.src =
+      url;
+
+
+    img.alt =
+      file.name;
+
+
+    img.loading =
+      "lazy";
+
+
+    img.onerror = () => {
+
+      preview.innerHTML =
+        `<div class="audio-icon">🖼️</div>`;
+
+    };
+
+
     preview.appendChild(img);
+
+
   } else if (isAudio) {
-    const audio = document.createElement("audio");
-    audio.className = "audio-preview";
-    audio.controls = true;
-    audio.preload = "metadata";
-    audio.src = url;
+
+    const audio =
+      document.createElement("audio");
+
+
+    audio.className =
+      "audio-preview";
+
+
+    audio.controls =
+      true;
+
+
+    audio.preload =
+      "metadata";
+
+
+    audio.src =
+      url;
+
+
     preview.appendChild(audio);
+
+
   } else {
-    preview.innerHTML = `<div class="audio-icon">📄</div>`;
+
+    preview.innerHTML =
+      `<div class="audio-icon">📄</div>`;
+
   }
+
+
   card.appendChild(preview);
 
-  const info = document.createElement("div");
-  info.className = "file-info";
 
-  const name = document.createElement("div");
-  name.className = "file-name";
-  name.textContent = file.name;
+  /* File information */
+
+  const info =
+    document.createElement("div");
+
+  info.className =
+    "file-info";
+
+
+  const name =
+    document.createElement("div");
+
+  name.className =
+    "file-name";
+
+  name.textContent =
+    file.name;
+
+
   info.appendChild(name);
 
-  const pathDiv = document.createElement("div");
-  pathDiv.className = "file-path";
-  pathDiv.textContent = `📂 ${file.path}`;
+
+  /* 完整路徑 */
+
+  const pathDiv =
+    document.createElement("div");
+
+  pathDiv.className =
+    "file-path";
+
+  pathDiv.textContent =
+    `📂 ${file.path}`;
+
+
   info.appendChild(pathDiv);
 
-  const urlRow = document.createElement("div");
-  urlRow.className = "url-row";
-  const inp = document.createElement("input");
-  inp.type = "text";
-  inp.readOnly = true;
-  inp.value = url;
-  const copyBtn = document.createElement("button");
-  copyBtn.className = "copy-btn";
-  copyBtn.textContent = "複製";
-  copyBtn.onclick = async () => {
-    const ok = await copyText(url);
-    showToast(ok ? "已複製" : "複製失敗", ok ? "success" : "error");
-  };
+
+  /* CDN URL */
+
+  const urlRow =
+    document.createElement("div");
+
+  urlRow.className =
+    "url-row";
+
+
+  const inp =
+    document.createElement("input");
+
+  inp.type =
+    "text";
+
+  inp.readOnly =
+    true;
+
+  inp.value =
+    url;
+
+
+  const copyBtn =
+    document.createElement("button");
+
+
+  copyBtn.className =
+    "copy-btn";
+
+
+  copyBtn.textContent =
+    "複製";
+
+
+  copyBtn.onclick =
+    async () => {
+
+      const ok =
+        await copyText(url);
+
+
+      showToast(
+        ok
+          ? "已複製"
+          : "複製失敗",
+        ok
+          ? "success"
+          : "error"
+      );
+
+    };
+
+
   urlRow.appendChild(inp);
+
   urlRow.appendChild(copyBtn);
+
   info.appendChild(urlRow);
 
-  const actions = document.createElement("div");
-  actions.className = "actions";
-  const openBtn = document.createElement("button");
-  openBtn.className = "secondary";
-  openBtn.textContent = "↗ 開啟";
-  openBtn.onclick = () => window.open(url, "_blank");
-  const delBtn = document.createElement("button");
-  delBtn.className = "danger";
-  delBtn.textContent = "🗑 刪除";
-  delBtn.onclick = () => deleteFile(file);
+
+  /* Actions */
+
+  const actions =
+    document.createElement("div");
+
+  actions.className =
+    "actions";
+
+
+  const openBtn =
+    document.createElement("button");
+
+  openBtn.className =
+    "secondary";
+
+  openBtn.textContent =
+    "↗ 開啟";
+
+
+  openBtn.onclick =
+    () => {
+
+      window.open(
+        url,
+        "_blank"
+      );
+
+    };
+
+
+  const delBtn =
+    document.createElement("button");
+
+  delBtn.className =
+    "danger";
+
+  delBtn.textContent =
+    "🗑 刪除";
+
+
+  delBtn.onclick =
+    () => deleteFile(file);
+
+
   actions.appendChild(openBtn);
+
   actions.appendChild(delBtn);
+
+
   info.appendChild(actions);
 
+
   card.appendChild(info);
+
+
   return card;
+
 }
+
 
 /* =========================================================
-   批次選擇 & 移動
+   批次選擇
    ========================================================= */
+
 function toggleSelectAll() {
-  const cbs = document.querySelectorAll(".file-card .checkbox");
-  const allChecked = Array.from(cbs).every(cb => cb.checked);
-  cbs.forEach(cb => {
-    cb.checked = !allChecked;
-    const path = cb.closest(".file-card").dataset.path;
-    if (cb.checked) selectedFiles.add(path);
-    else selectedFiles.delete(path);
-  });
-  updateBatchMoveUI();
-}
 
-function clearSelection() {
-  selectedFiles.clear();
-  document.querySelectorAll(".file-card .checkbox").forEach(cb => cb.checked = false);
-  updateBatchMoveUI();
-}
+  const cbs =
+    document.querySelectorAll(
+      ".file-card .checkbox"
+    );
 
-function updateBatchMoveUI() {
-  const area = document.getElementById("batchMoveArea");
-  const count = document.getElementById("selectedCount");
-  if (selectedFiles.size === 0) {
-    area.style.display = "none";
+
+  if (!cbs.length) {
     return;
   }
-  area.style.display = "flex";
-  count.textContent = `已選 ${selectedFiles.size} 個檔案`;
-}
 
-async function batchMoveFiles() {
-  const targetFolder = document.getElementById("batchMoveTarget").value;
-  const filesToMove = allFiles.filter(f => selectedFiles.has(f.path));
-  if (!filesToMove.length) { showToast("沒有選取檔案", "error"); return; }
-  if (!confirm(`移動 ${filesToMove.length} 個檔案到 ${targetFolder || "根目錄"}？`)) return;
 
-  let successCount = 0;
-  for (const file of filesToMove) {
-    try {
-      await moveSingleFile(file, targetFolder);
-      successCount++;
-    } catch (e) {
-      showToast(`移動 ${file.name} 失敗：${e.message}`, "error");
+  const allChecked =
+    Array.from(cbs)
+      .every(cb => cb.checked);
+
+
+  cbs.forEach(cb => {
+
+    cb.checked =
+      !allChecked;
+
+
+    const path =
+      cb
+        .closest(".file-card")
+        .dataset.path;
+
+
+    if (cb.checked) {
+
+      selectedFiles.add(path);
+
+    } else {
+
+      selectedFiles.delete(path);
+
     }
+
+  });
+
+
+  updateBatchMoveUI();
+
+}
+
+
+function clearSelection() {
+
+  selectedFiles.clear();
+
+
+  document
+    .querySelectorAll(
+      ".file-card .checkbox"
+    )
+    .forEach(
+      cb => cb.checked = false
+    );
+
+
+  updateBatchMoveUI();
+
+}
+
+
+function updateBatchMoveUI() {
+
+  const area =
+    document.getElementById(
+      "batchMoveArea"
+    );
+
+
+  const count =
+    document.getElementById(
+      "selectedCount"
+    );
+
+
+  if (
+    selectedFiles.size === 0
+  ) {
+
+    area.style.display =
+      "none";
+
+    return;
+
   }
-  showToast(`✅ 成功移動 ${successCount} 個檔案`, "success");
-  clearSelection();
-  await loadFiles();
+
+
+  area.style.display =
+    "flex";
+
+
+  count.textContent =
+    `已選 ${selectedFiles.size} 個檔案`;
+
 }
 
-async function moveSingleFile(file, targetFolder) {
-  const resp = await fetch(file.download_url);
-  const blob = await resp.blob();
-  const base64 = await blobToBase64(blob);
-  const fileName = file.name;
-  const newPath = targetFolder ? `${targetFolder}/${fileName}` : fileName;
-
-  await ghReq(`${API_BASE}/${encodePath(newPath)}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: `Move ${fileName}`, content: base64, branch: GITHUB_BRANCH })
-  });
-
-  await ghReq(`${API_BASE}/${encodePath(file.path)}`, {
-    method: "DELETE",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: `Delete old ${fileName}`, sha: file.sha, branch: GITHUB_BRANCH })
-  });
-}
-
-function blobToBase64(blob) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => { resolve(String(reader.result).split(",")[1]); };
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
 
 /* =========================================================
-   🆕 新增資料夾 + 上傳圖片（彈窗）
+   批次移動
    ========================================================= */
-function showCreateFolderModal() {
-  document.getElementById("createFolderModal").style.display = "flex";
-  document.getElementById("modalFolderName").value = "";
-  document.getElementById("modalFileSelected").textContent = "";
-  modalFile = null;
-  document.getElementById("modalFileInput").value = "";
+
+async function batchMoveFiles() {
+
+  const targetFolder =
+    document.getElementById(
+      "batchMoveTarget"
+    ).value;
+
+
+  const filesToMove =
+    allFiles.filter(
+      f =>
+        selectedFiles.has(
+          f.path
+        )
+    );
+
+
+  if (!filesToMove.length) {
+
+    showToast(
+      "沒有選取檔案",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (
+    !confirm(
+      `移動 ${filesToMove.length} 個檔案到 ${targetFolder || "根目錄"}？`
+    )
+  ) {
+
+    return;
+
+  }
+
+
+  let successCount = 0;
+
+
+  for (
+    const file of filesToMove
+  ) {
+
+    try {
+
+      await moveSingleFile(
+        file,
+        targetFolder
+      );
+
+      successCount++;
+
+
+    } catch (e) {
+
+      showToast(
+        `移動 ${file.name} 失敗：${e.message}`,
+        "error"
+      );
+
+    }
+
+  }
+
+
+  showToast(
+    `✅ 成功移動 ${successCount} 個檔案`,
+    "success"
+  );
+
+
+  clearSelection();
+
+
+  await loadFiles();
+
 }
+
+
+/* =========================================================
+   移動單一檔案
+   ========================================================= */
+
+async function moveSingleFile(
+  file,
+  targetFolder
+) {
+
+  const resp =
+    await fetch(
+      file.download_url
+    );
+
+
+  if (!resp.ok) {
+
+    throw new Error(
+      "無法取得原始檔案"
+    );
+
+  }
+
+
+  const blob =
+    await resp.blob();
+
+
+  const base64 =
+    await blobToBase64(blob);
+
+
+  const fileName =
+    file.name;
+
+
+  const newPath =
+    targetFolder
+      ? `${targetFolder}/${fileName}`
+      : fileName;
+
+
+  /*
+   * 如果新路徑跟舊路徑完全相同，
+   * 不需要移動。
+   */
+
+  if (
+    newPath === file.path
+  ) {
+
+    throw new Error(
+      "檔案已經在這個資料夾"
+    );
+
+  }
+
+
+  await ghReq(
+    `${API_BASE}/${encodePath(newPath)}`,
+    {
+      method: "PUT",
+
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+
+      body: JSON.stringify({
+
+        message:
+          `Move ${file.path} to ${newPath}`,
+
+        content:
+          base64,
+
+        branch:
+          GITHUB_BRANCH
+
+      })
+
+    }
+  );
+
+
+  await ghReq(
+    `${API_BASE}/${encodePath(file.path)}`,
+    {
+      method: "DELETE",
+
+      headers: {
+        "Content-Type":
+          "application/json"
+      },
+
+      body: JSON.stringify({
+
+        message:
+          `Delete old ${file.path}`,
+
+        sha:
+          file.sha,
+
+        branch:
+          GITHUB_BRANCH
+
+      })
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   Base64
+   ========================================================= */
+
+function blobToBase64(blob) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        () => {
+
+          resolve(
+            String(reader.result)
+              .split(",")[1]
+          );
+
+        };
+
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(blob);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   新增資料夾
+   ========================================================= */
+
+function showCreateFolderModal() {
+
+  document
+    .getElementById(
+      "createFolderModal"
+    )
+    .style.display =
+    "flex";
+
+
+  document
+    .getElementById(
+      "modalFolderName"
+    )
+    .value = "";
+
+
+  document
+    .getElementById(
+      "modalFileSelected"
+    )
+    .textContent = "";
+
+
+  modalFile =
+    null;
+
+
+  document
+    .getElementById(
+      "modalFileInput"
+    )
+    .value = "";
+
+}
+
 
 function closeModal() {
-  document.getElementById("createFolderModal").style.display = "none";
+
+  document
+    .getElementById(
+      "createFolderModal"
+    )
+    .style.display =
+    "none";
+
 }
+
+
+/* =========================================================
+   ⭐ 新增資料夾 + 上傳圖片
+   ========================================================= */
 
 async function createFolderWithImage() {
-  const name = document.getElementById("modalFolderName").value.trim();
-  if (!name) { showToast("請輸入資料夾名稱", "error"); return; }
-  if (!modalFile) { showToast("請選擇一張圖片", "error"); return; }
+
+  const name =
+    document
+      .getElementById(
+        "modalFolderName"
+      )
+      .value
+      .trim();
+
+
+  if (!name) {
+
+    showToast(
+      "請輸入資料夾名稱",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!modalFile) {
+
+    showToast(
+      "請選擇一張圖片",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /*
+   * 防止資料夾名稱造成非法路徑。
+   */
+
+  if (
+    name.includes("..") ||
+    name.startsWith("/") ||
+    name.endsWith("/") ||
+    name.includes("\\")
+  ) {
+
+    showToast(
+      "資料夾名稱不合法",
+      "error"
+    );
+
+    return;
+
+  }
+
 
   try {
-    // 1. 建立資料夾（上傳 .keep）
-    const keepPath = `${name}/.keep`;
-    await ghReq(`${API_BASE}/${encodePath(keepPath)}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: `Create folder ${name}`,
-        content: btoa(""),
-        branch: GITHUB_BRANCH
-      })
-    });
 
-    // 2. 上傳圖片到該資料夾
-    const base64 = await fileToBase64(modalFile);
-    const imagePath = `${name}/${modalFile.name}`;
-    await ghReq(`${API_BASE}/${encodePath(imagePath)}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: `Upload ${modalFile.name} to ${name}`,
-        content: base64,
-        branch: GITHUB_BRANCH
-      })
-    });
+    showToast(
+      "正在建立資料夾...",
+      ""
+    );
 
-    showToast(`✅ 資料夾 ${name} 已建立，並上傳 ${modalFile.name}`, "success");
+
+    /* -------------------------
+       1. 建立 .keep
+       ------------------------- */
+
+    const keepPath =
+      `${name}/.keep`;
+
+
+    await ghReq(
+      `${API_BASE}/${encodePath(keepPath)}`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message:
+            `Create folder ${name}`,
+
+          content:
+            btoa(""),
+
+          branch:
+            GITHUB_BRANCH
+
+        })
+
+      }
+    );
+
+
+    /* -------------------------
+       2. 上傳圖片
+       ------------------------- */
+
+    const base64 =
+      await fileToBase64(
+        modalFile
+      );
+
+
+    const imagePath =
+      `${name}/${modalFile.name}`;
+
+
+    await ghReq(
+      `${API_BASE}/${encodePath(imagePath)}`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message:
+            `Upload ${modalFile.name} to ${name}`,
+
+          content:
+            base64,
+
+          branch:
+            GITHUB_BRANCH
+
+        })
+
+      }
+    );
+
+
+    showToast(
+      `✅ 資料夾 ${name} 已建立，並上傳 ${modalFile.name}`,
+      "success"
+    );
+
+
     closeModal();
-    
-    // ✅ 這裡是關鍵：強制刷新圖庫和下拉選單！
+
+
+    /*
+     * ⭐ 重新遞迴掃描整個 GitHub。
+     *
+     * 這裡會找到：
+     *
+     * name/圖片.jpg
+     *
+     * 所以新增後會立即出現在圖庫。
+     */
+
     await loadFiles();
-    
+
+
   } catch (e) {
-    showToast(`建立失敗：${e.message}`, "error");
+
+    console.error(e);
+
+
+    showToast(
+      `建立失敗：${e.message}`,
+      "error"
+    );
+
   }
+
 }
+
 
 /* =========================================================
    刪除檔案
    ========================================================= */
+
 async function deleteFile(file) {
-  if (!confirm(`確定刪除 ${file.path} 嗎？`)) return;
-  try {
-    await ghReq(`${API_BASE}/${encodePath(file.path)}`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: `Delete ${file.name}`, sha: file.sha, branch: GITHUB_BRANCH })
-    });
-    showToast(`已刪除 ${file.name}`, "success");
-    await loadFiles();
-  } catch (e) {
-    showToast(`刪除失敗：${e.message}`, "error");
+
+  if (
+    !confirm(
+      `確定刪除 ${file.path} 嗎？`
+    )
+  ) {
+
+    return;
+
   }
+
+
+  try {
+
+    await ghReq(
+      `${API_BASE}/${encodePath(file.path)}`,
+      {
+        method: "DELETE",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message:
+            `Delete ${file.path}`,
+
+          sha:
+            file.sha,
+
+          branch:
+            GITHUB_BRANCH
+
+        })
+
+      }
+    );
+
+
+    showToast(
+      `已刪除 ${file.path}`,
+      "success"
+    );
+
+
+    await loadFiles();
+
+
+  } catch (e) {
+
+    showToast(
+      `刪除失敗：${e.message}`,
+      "error"
+    );
+
+  }
+
 }
 
+
 /* =========================================================
-   上傳（一般）
+   一般上傳
    ========================================================= */
+
 function setupDragAndDrop() {
-  const dz = document.getElementById("dropZone");
-  ["dragenter","dragover"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add("dragover"); }));
-  ["dragleave","drop"].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove("dragover"); }));
-  dz.addEventListener("drop", e => handleFiles(Array.from(e.dataTransfer.files)));
+
+  const dz =
+    document.getElementById(
+      "dropZone"
+    );
+
+
+  ["dragenter", "dragover"]
+    .forEach(ev => {
+
+      dz.addEventListener(
+        ev,
+        e => {
+
+          e.preventDefault();
+
+          dz.classList.add(
+            "dragover"
+          );
+
+        }
+      );
+
+    });
+
+
+  ["dragleave", "drop"]
+    .forEach(ev => {
+
+      dz.addEventListener(
+        ev,
+        e => {
+
+          e.preventDefault();
+
+          dz.classList.remove(
+            "dragover"
+          );
+
+        }
+      );
+
+    });
+
+
+  dz.addEventListener(
+    "drop",
+    e => {
+
+      handleFiles(
+        Array.from(
+          e.dataTransfer.files
+        )
+      );
+
+    }
+  );
+
 }
+
+
+/* =========================================================
+   處理上傳檔案
+   ========================================================= */
 
 async function handleFiles(files) {
-  if (!files.length) return;
-  if (!getToken()) { showToast("請先設定 Token", "error"); return; }
-  const valid = files.filter(f => ALLOWED_EXTENSIONS.includes(getExtension(f.name)));
-  if (!valid.length) { showToast("沒有支援的檔案", "error"); return; }
 
-  const list = document.getElementById("uploadList");
-  list.style.display = "block";
-  const folder = document.getElementById("uploadFolderSelect").value;
-
-  for (const file of valid) {
-    await uploadFile(file, folder);
+  if (!files.length) {
+    return;
   }
+
+
+  if (!getToken()) {
+
+    showToast(
+      "請先設定 Token",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const valid =
+    files.filter(
+      f =>
+        ALLOWED_EXTENSIONS.includes(
+          getExtension(f.name)
+        )
+    );
+
+
+  if (!valid.length) {
+
+    showToast(
+      "沒有支援的檔案",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const list =
+    document.getElementById(
+      "uploadList"
+    );
+
+
+  list.style.display =
+    "block";
+
+
+  const folder =
+    document.getElementById(
+      "uploadFolderSelect"
+    ).value;
+
+
+  for (
+    const file of valid
+  ) {
+
+    await uploadFile(
+      file,
+      folder
+    );
+
+  }
+
+
+  /*
+   * 上傳完成後重新掃描。
+   */
+
   await loadFiles();
+
 }
 
-async function uploadFile(file, folder) {
-  const list = document.getElementById("uploadList");
-  const item = document.createElement("div");
-  item.className = "upload-item";
-  item.innerHTML = `
-    <div class="upload-item-top">
-      <div class="upload-name">${file.name}</div>
-      <div class="status loading">處理中...</div>
-    </div>
-    <div class="progress"><div class="progress-bar"></div></div>
-  `;
-  list.prepend(item);
-
-  const bar = item.querySelector(".progress-bar");
-  const status = item.querySelector(".status");
-
-  try {
-    bar.style.width = "30%";
-    const base64 = await fileToBase64(file);
-    bar.style.width = "70%";
-    const path = folder ? `${folder}/${file.name}` : file.name;
-
-    await ghReq(`${API_BASE}/${encodePath(path)}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: `Upload ${file.name}`, content: base64, branch: GITHUB_BRANCH })
-    });
-
-    bar.style.width = "100%";
-    status.className = "status success";
-    status.textContent = "✓ 成功";
-    showToast(`${file.name} 上傳成功`, "success");
-  } catch (e) {
-    bar.style.width = "100%";
-    status.className = "status error";
-    status.textContent = "✕ 失敗";
-    showToast(`${file.name}：${e.message}`, "error");
-  }
-}
 
 /* =========================================================
-   工具函式
+   上傳單一檔案
    ========================================================= */
-function getExtension(f) { const p = f.toLowerCase().split("."); return p.length > 1 ? p.pop() : ""; }
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = () => {
-      const b64 = String(r.result).split(",")[1];
-      b64 ? resolve(b64) : reject(new Error("轉換失敗"));
-    };
-    r.onerror = reject;
-    r.readAsDataURL(file);
-  });
-}
-async function copyText(text) {
+
+async function uploadFile(
+  file,
+  folder
+) {
+
+  const list =
+    document.getElementById(
+      "uploadList"
+    );
+
+
+  const item =
+    document.createElement("div");
+
+
+  item.className =
+    "upload-item";
+
+
+  item.innerHTML = `
+
+    <div class="upload-item-top">
+
+      <div class="upload-name">
+        ${escapeHtml(file.name)}
+      </div>
+
+      <div class="status loading">
+        處理中...
+      </div>
+
+    </div>
+
+    <div class="progress">
+
+      <div
+        class="progress-bar"
+      ></div>
+
+    </div>
+
+  `;
+
+
+  list.prepend(item);
+
+
+  const bar =
+    item.querySelector(
+      ".progress-bar"
+    );
+
+
+  const status =
+    item.querySelector(
+      ".status"
+    );
+
+
   try {
-    if (navigator.clipboard && window.isSecureContext) {
-      await navigator.clipboard.writeText(text);
-      return true;
-    }
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand("copy");
-    ta.remove();
-    return ok;
-  } catch { return false; }
+
+    bar.style.width =
+      "30%";
+
+
+    const base64 =
+      await fileToBase64(file);
+
+
+    bar.style.width =
+      "70%";
+
+
+    const path =
+      folder
+        ? `${folder}/${file.name}`
+        : file.name;
+
+
+    await ghReq(
+      `${API_BASE}/${encodePath(path)}`,
+      {
+        method: "PUT",
+
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+
+        body: JSON.stringify({
+
+          message:
+            `Upload ${path}`,
+
+          content:
+            base64,
+
+          branch:
+            GITHUB_BRANCH
+
+        })
+
+      }
+    );
+
+
+    bar.style.width =
+      "100%";
+
+
+    status.className =
+      "status success";
+
+
+    status.textContent =
+      "✓ 成功";
+
+
+    showToast(
+      `${path} 上傳成功`,
+      "success"
+    );
+
+
+  } catch (e) {
+
+    bar.style.width =
+      "100%";
+
+
+    status.className =
+      "status error";
+
+
+    status.textContent =
+      "✕ 失敗";
+
+
+    showToast(
+      `${file.name}：${e.message}`,
+      "error"
+    );
+
+  }
+
 }
+
+
+/* =========================================================
+   工具
+   ========================================================= */
+
+function getExtension(f) {
+
+  const p =
+    f.toLowerCase()
+      .split(".");
+
+
+  return p.length > 1
+    ? p.pop()
+    : "";
+
+}
+
+
+/* =========================================================
+   File → Base64
+   ========================================================= */
+
+function fileToBase64(file) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const r =
+        new FileReader();
+
+
+      r.onload =
+        () => {
+
+          const b64 =
+            String(r.result)
+              .split(",")[1];
+
+
+          b64
+            ? resolve(b64)
+            : reject(
+                new Error(
+                  "轉換失敗"
+                )
+              );
+
+        };
+
+
+      r.onerror =
+        reject;
+
+
+      r.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   Blob → Base64
+   ========================================================= */
+
+function blobToBase64(blob) {
+
+  return new Promise(
+    (resolve, reject) => {
+
+      const reader =
+        new FileReader();
+
+
+      reader.onload =
+        () => {
+
+          resolve(
+            String(reader.result)
+              .split(",")[1]
+          );
+
+        };
+
+
+      reader.onerror =
+        reject;
+
+
+      reader.readAsDataURL(blob);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   複製
+   ========================================================= */
+
+async function copyText(text) {
+
+  try {
+
+    if (
+      navigator.clipboard &&
+      window.isSecureContext
+    ) {
+
+      await navigator.clipboard.writeText(
+        text
+      );
+
+      return true;
+
+    }
+
+
+    const ta =
+      document.createElement(
+        "textarea"
+      );
+
+
+    ta.value =
+      text;
+
+
+    ta.style.position =
+      "fixed";
+
+
+    ta.style.opacity =
+      "0";
+
+
+    document.body.appendChild(
+      ta
+    );
+
+
+    ta.select();
+
+
+    const ok =
+      document.execCommand(
+        "copy"
+      );
+
+
+    ta.remove();
+
+
+    return ok;
+
+
+  } catch {
+
+    return false;
+
+  }
+
+}
+
+
+/* =========================================================
+   防止檔名出現在 innerHTML 時產生 HTML
+   ========================================================= */
+
+function escapeHtml(text) {
+
+  const div =
+    document.createElement(
+      "div"
+    );
+
+
+  div.textContent =
+    text;
+
+
+  return div.innerHTML;
+
+}
+
 </script>
+
 </body>
 </html>
