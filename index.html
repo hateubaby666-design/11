@@ -467,7 +467,7 @@
       <code id="repoPath"></code> 的檔案。<br>
       3. 點擊或拖曳檔案到上傳區即可批次上傳。<br>
       4. 上傳完成後，檔案會自動出現在圖庫。<br>
-      5. 「複製」會複製 GitHub Pages 外鏈，例如：
+      5. 「複製」會複製 jsDelivr CDN 外鏈，例如：
       <code id="exampleUrl"></code><br><br>
 
       <strong>注意：</strong>
@@ -494,9 +494,9 @@ const GITHUB_BRANCH = "main";
 const API_BASE =
   `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/contents`;
 
-/* GitHub Pages 外鏈 */
+/* jsDelivr CDN 外鏈（改這裡！） */
 const PAGES_BASE =
-  `https://${GITHUB_USERNAME}.github.io/${GITHUB_REPOSITORY}/`;
+  `https://cdn.jsdelivr.net/gh/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}@main/`;
 
 /* Token localStorage key */
 const TOKEN_STORAGE_KEY = "github_image_host_token";
