@@ -878,7 +878,10 @@ async function createFolderWithImage() {
 
     showToast(`✅ 資料夾 ${name} 已建立，並上傳 ${modalFile.name}`, "success");
     closeModal();
+    
+    // ✅ 這裡是關鍵：強制刷新圖庫和下拉選單！
     await loadFiles();
+    
   } catch (e) {
     showToast(`建立失敗：${e.message}`, "error");
   }
