@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Pages 圖床管理器</title>
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC",
+      "Microsoft JhengHei", sans-serif;
+    background: #f5f3fa;
+    color: #29243a;
+  }
+
+  .header {
+    background: linear-gradient(135deg, #7c3aed, #a855f7, #c084fc);
+    color: white;
+    padding: 28px 24px 32px;
+    box-shadow: 0 4px 20px rgba(124, 58, 237, .2);
+  }
+
+  .header-inner {
+    max-width: 1200px;
+    margin: auto;
+  }
+
+  .header h1 {
+    margin: 0 0 7px;
+    font-size: 28px;
+  }
+
+  .header p {
+    margin: 0;
+    opacity: .9;
+    font-size: 14px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: -16px auto 40px;
+    padding: 0 18px;
+  }
+
+  .card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 5px 22px rgba(35, 20, 60, .08);
+    padding: 20px;
+    margin-bottom: 18px;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 15px;
+  }
+
+  .section-title h2 {
+    margin: 0;
+    font-size: 18px;
+  }
+
+  .token-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid #ddd6e8;
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 14px;
+    outline: none;
+    transition: .2s;
+  }
+
+  input:focus {
+    border-color: #8b5cf6;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, .12);
+  }
+
+  button {
+    border: 0;
+    border-radius: 10px;
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: .2s;
+    white-space: nowrap;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+  }
+
+  .primary {
+    background: #7c3aed;
+    color: white;
+  }
+
+  .secondary {
+    background: #f0ebfa;
+    color: #6334b5;
+  }
+
+  .danger {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+  .dark {
+    background: #29243a;
+    color: white;
+  }
+
+  .token-note,
+  .help {
+    color: #7b7288;
+    font-size: 12px;
+    margin-top: 9px;
+    line-height: 1.6;
+  }
+
+  .drop-zone {
+    border: 2px dashed #c4b5fd;
+    background: #faf8ff;
+    border-radius: 14px;
+    padding: 38px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+  }
+
+  .drop-zone:hover,
+  .drop-zone.dragover {
+    background: #f3edff;
+    border-color: #7c3aed;
+  }
+
+  .drop-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+  }
+
+  .drop-zone strong {
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .drop-zone span {
+    color: #81778e;
+    font-size: 13px;
+  }
+
+  #fileInput {
+    display: none;
+  }
+
+  .upload-list {
+    margin-top: 15px;
+    display: none;
+  }
+
+  .upload-item {
+    border: 1px solid #ebe6f2;
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    font-size: 13px;
+  }
+
+  .upload-item-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .upload-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .status {
+    flex-shrink: 0;
+    font-size: 12px;
+  }
+
+  .status.success { color: #16a34a; }
+  .status.error { color: #dc2626; }
+  .status.loading { color: #7c3aed; }
+
+  .progress {
+    height: 5px;
+    background: #eeeaf4;
+    border-radius: 99px;
+    overflow: hidden;
+    margin-top: 8px;
+  }
+
+  .progress-bar {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #7c3aed, #c084fc);
+    transition: width .25s;
+  }
+
+  .library-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .count {
+    color: #8a8195;
+    font-size: 13px;
+    margin-left: 6px;
+  }
+
+  .empty {
+    text-align: center;
+    color: #8a8195;
+    padding: 45px 20px;
+  }
+
+  .file-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 16px;
+  }
+
+  .file-card {
+    background: white;
+    border: 1px solid #ece8f2;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 3px 12px rgba(35, 20, 60, .06);
+  }
+
+  .preview {
+    height: 180px;
+    background: #f7f5fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .audio-preview {
+    width: 90%;
+  }
+
+  .audio-icon {
+    font-size: 45px;
+  }
+
+  .file-info {
+    padding: 14px;
+  }
+
+  .file-name {
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin-bottom: 10px;
+  }
+
+  .url-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 9px;
+  }
+
+  .url-row input {
+    font-size: 11px;
+    padding: 8px;
+  }
+
+  .copy-btn {
+    padding: 8px 10px;
+    background: #ede9fe;
+    color: #6d28d9;
+  }
+
+  .actions {
+    display: flex;
+    gap: 7px;
+  }
+
+  .actions button {
+    flex: 1;
+    padding: 8px 9px;
+    font-size: 12px;
+  }
+
+  .info-box {
+    background: #faf8ff;
+    border: 1px solid #eee8ff;
+    border-radius: 11px;
+    padding: 13px;
+    margin-top: 15px;
+    color: #655c70;
+    font-size: 12px;
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 23px; }
+
+    .token-row {
+      flex-direction: column;
+    }
+
+    .library-header {
+      align-items: flex-start;
+    }
+
+    .file-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .toast-container {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: calc(100vw - 36px);
+  }
+
+  .toast {
+    background: #29243a;
+    color: white;
+    padding: 12px 16px;
+    border-radius: 11px;
+    box-shadow: 0 7px 25px rgba(0,0,0,.18);
+    font-size: 13px;
+    animation: toastIn .25s ease;
+  }
+
+  .toast.success { background: #15803d; }
+  .toast.error { background: #b91c1c; }
+
+  @keyframes toastIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <h1>☁️ GitHub Pages 圖床管理器</h1>
+    <p id="repoInfo">GitHub Pages 檔案管理</p>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- Token -->
+  <section class="card">
+    <div class="section-title">
+      <h2>🔑 GitHub Token</h2>
+    </div>
+
+    <div class="token-row">
+      <input
+        id="tokenInput"
+        type="password"
+        placeholder="輸入 GitHub Personal Access Token"
+        autocomplete="off"
+      >
+      <button class="primary" onclick="saveToken()">儲存 Token</button>
+    </div>
+
+    <div class="token-note">
+      Token 只會儲存在目前瀏覽器的 localStorage，不會上傳到其他伺服器。
+      建議使用具有該 Repository Contents 讀寫權限的 Fine-grained Personal Access Token。
+    </div>
+  </section>
+
+  <!-- Upload -->
+  <section class="card">
+    <div class="section-title">
+      <h2>📤 上傳檔案</h2>
+    </div>
+
+    <div
+      id="dropZone"
+      class="drop-zone"
+      onclick="document.getElementById('fileInput').click()"
+    >
+      <div class="drop-icon">📁</div>
+      <strong>點擊選擇檔案，或直接拖曳到這裡</strong>
+      <span>
+        支援多選 · 圖片：JPG PNG GIF WEBP SVG BMP ICO ·
+        音訊：MP3 WAV M4A OGG FLAC AAC
+      </span>
+    </div>
+
+    <input
+      id="fileInput"
+      type="file"
+      multiple
+      accept=".jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.ico,.mp3,.wav,.m4a,.ogg,.flac,.aac"
+    >
+
+    <div id="uploadList" class="upload-list"></div>
+  </section>
+
+  <!-- Library -->
+  <section class="card">
+    <div class="section-title library-header">
+      <h2>
+        🗂️ 我的圖庫
+        <span id="fileCount" class="count">0 個檔案</span>
+      </h2>
+
+      <button class="secondary" onclick="loadFiles()">
+        ↻ 重新整理圖庫
+      </button>
+    </div>
+
+    <div id="library">
+      <div class="empty">尚未載入檔案</div>
+    </div>
+  </section>
+
+  <!-- Help -->
+  <section class="card">
+    <div class="section-title">
+      <h2>💡 使用說明</h2>
+    </div>
+
+    <div class="info-box">
+      <strong>第一次使用：</strong><br>
+      1. 在上方輸入 GitHub Personal Access Token 並儲存。<br>
+      2. 點擊「重新整理圖庫」即可讀取
+      <code id="repoPath"></code> 的檔案。<br>
+      3. 點擊或拖曳檔案到上傳區即可批次上傳。<br>
+      4. 上傳完成後，檔案會自動出現在圖庫。<br>
+      5. 「複製」會複製 GitHub Pages 外鏈，例如：
+      <code id="exampleUrl"></code><br><br>
+
+      <strong>注意：</strong>
+      GitHub API 對單一檔案有大小限制，超大型檔案可能無法透過此頁面上傳。
+      如果 Token 被撤銷或權限不足，操作會顯示錯誤訊息。
+    </div>
+  </section>
+
+</main>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<script>
+/* =========================================================
+   GitHub 設定
+   只需要修改這裡即可換成其他 Repository
+   ========================================================= */
+
+const GITHUB_USERNAME = "hateubaby666-design";
+const GITHUB_REPOSITORY = "11";
+const GITHUB_BRANCH = "main";
+
+/* GitHub API 基本網址 */
+const API_BASE =
+  `https://api.github.com/repos/${GITHUB_USERNAME}/${GITHUB_REPOSITORY}/contents`;
+
+/* GitHub Pages 外鏈 */
+const PAGES_BASE =
+  `https://${GITHUB_USERNAME}.github.io/${GITHUB_REPOSITORY}/`;
+
+/* Token localStorage key */
+const TOKEN_STORAGE_KEY = "github_image_host_token";
+
+/* =========================================================
+   支援的檔案格式
+   ========================================================= */
+
+const IMAGE_EXTENSIONS = [
+  "jpg", "jpeg", "png", "gif", "webp", "svg", "bmp", "ico"
+];
+
+const AUDIO_EXTENSIONS = [
+  "mp3", "wav", "m4a", "ogg", "flac", "aac"
+];
+
+const ALLOWED_EXTENSIONS = [
+  ...IMAGE_EXTENSIONS,
+  ...AUDIO_EXTENSIONS
+];
+
+/* =========================================================
+   初始化
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("repoInfo").textContent =
+    `${GITHUB_USERNAME} / ${GITHUB_REPOSITORY} · ${GITHUB_BRANCH}`;
+
+  document.getElementById("repoPath").textContent =
+    `${GITHUB_USERNAME}/${GITHUB_REPOSITORY}`;
+
+  document.getElementById("exampleUrl").textContent =
+    `${PAGES_BASE}example.png`;
+
+  const savedToken = localStorage.getItem(TOKEN_STORAGE_KEY);
+
+  if (savedToken) {
+    document.getElementById("tokenInput").value = savedToken;
+    loadFiles();
+  }
+
+  setupDragAndDrop();
+});
+
+/* =========================================================
+   Token
+   ========================================================= */
+
+function getToken() {
+  return localStorage.getItem(TOKEN_STORAGE_KEY) ||
+         document.getElementById("tokenInput").value.trim();
+}
+
+function saveToken() {
+  const token = document.getElementById("tokenInput").value.trim();
+
+  if (!token) {
+    showToast("請先輸入 Token", "error");
+    return;
+  }
+
+  localStorage.setItem(TOKEN_STORAGE_KEY, token);
+  showToast("Token 已儲存", "success");
+  loadFiles();
+}
+
+/* =========================================================
+   Toast
+   ========================================================= */
+
+function showToast(message, type = "") {
+  const container = document.getElementById("toastContainer");
+
+  const toast = document.createElement("div");
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+
+  container.appendChild(toast);
+
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateY(10px)";
+
+    setTimeout(() => toast.remove(), 250);
+  }, 3000);
+}
+
+/* =========================================================
+   GitHub API
+   ========================================================= */
+
+function githubHeaders() {
+  const token = getToken();
+
+  if (!token) {
+    throw new Error("尚未設定 GitHub Token");
+  }
+
+  return {
+    "Authorization": `Bearer ${token}`,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28"
+  };
+}
+
+async function githubRequest(url, options = {}) {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...githubHeaders(),
+      ...(options.headers || {})
+    }
+  });
+
+  let data = null;
+
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    const message =
+      data?.message ||
+      `GitHub API 錯誤 (${response.status})`;
+
+    throw new Error(message);
+  }
+
+  return data;
+}
+
+/* =========================================================
+   讀取圖庫
+   ========================================================= */
+
+async function loadFiles() {
+  const token = getToken();
+
+  if (!token) {
+    showToast("請先設定 GitHub Token", "error");
+    return;
+  }
+
+  const library = document.getElementById("library");
+
+  library.innerHTML =
+    `<div class="empty">⏳ 正在載入圖庫...</div>`;
+
+  try {
+    const data = await githubRequest(
+      `${API_BASE}?ref=${encodeURIComponent(GITHUB_BRANCH)}`
+    );
+
+    /*
+      Repository 根目錄可能包含資料夾。
+      這裡只展示檔案。
+    */
+    const files = Array.isArray(data)
+      ? data.filter(item => item.type === "file")
+      : [];
+
+    document.getElementById("fileCount").textContent =
+      `${files.length} 個檔案`;
+
+    if (!files.length) {
+      library.innerHTML =
+        `<div class="empty">📭 目前沒有檔案</div>`;
+      return;
+    }
+
+    library.innerHTML = "";
+
+    const grid = document.createElement("div");
+    grid.className = "file-grid";
+
+    files.forEach(file => {
+      grid.appendChild(createFileCard(file));
+    });
+
+    library.appendChild(grid);
+
+  } catch (error) {
+    library.innerHTML =
+      `<div class="empty">❌ 無法讀取圖庫<br><small>${escapeHtml(error.message)}</small></div>`;
+
+    showToast(`讀取失敗：${error.message}`, "error");
+  }
+}
+
+/* =========================================================
+   建立檔案卡片
+   ========================================================= */
+
+function createFileCard(file) {
+  const card = document.createElement("div");
+  card.className = "file-card";
+
+  const ext = getExtension(file.name);
+  const isImage = IMAGE_EXTENSIONS.includes(ext);
+  const isAudio = AUDIO_EXTENSIONS.includes(ext);
+
+  const url = `${PAGES_BASE}${encodePath(file.path)}`;
+
+  const preview = document.createElement("div");
+  preview.className = "preview";
+
+  if (isImage) {
+    const img = document.createElement("img");
+    img.src = url;
+    img.alt = file.name;
+    img.loading = "lazy";
+
+    img.onerror = () => {
+      preview.innerHTML =
+        `<div class="audio-icon">🖼️</div>`;
+    };
+
+    preview.appendChild(img);
+
+  } else if (isAudio) {
+    const audio = document.createElement("audio");
+    audio.className = "audio-preview";
+    audio.controls = true;
+    audio.preload = "metadata";
+    audio.src = url;
+
+    preview.appendChild(audio);
+
+  } else {
+    preview.innerHTML =
+      `<div class="audio-icon">📄</div>`;
+  }
+
+  const info = document.createElement("div");
+  info.className = "file-info";
+
+  const name = document.createElement("div");
+  name.className = "file-name";
+  name.title = file.name;
+  name.textContent = file.name;
+
+  const urlRow = document.createElement("div");
+  urlRow.className = "url-row";
+
+  const urlInput = document.createElement("input");
+  urlInput.type = "text";
+  urlInput.readOnly = true;
+  urlInput.value = url;
+
+  const copyBtn = document.createElement("button");
+  copyBtn.className = "copy-btn";
+  copyBtn.textContent = "複製";
+
+  copyBtn.onclick = async () => {
+    const success = await copyText(url);
+
+    if (success) {
+      showToast("外鏈已複製", "success");
+    } else {
+      showToast("複製失敗，請手動複製", "error");
+      urlInput.select();
+    }
+  };
+
+  urlRow.appendChild(urlInput);
+  urlRow.appendChild(copyBtn);
+
+  const actions = document.createElement("div");
+  actions.className = "actions";
+
+  const openBtn = document.createElement("button");
+  openBtn.className = "secondary";
+  openBtn.textContent = "↗ 開啟";
+  openBtn.onclick = () => {
+    window.open(url, "_blank", "noopener,noreferrer");
+  };
+
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "danger";
+  deleteBtn.textContent = "🗑 刪除";
+
+  deleteBtn.onclick = () => {
+    deleteFile(file);
+  };
+
+  actions.appendChild(openBtn);
+  actions.appendChild(deleteBtn);
+
+  info.appendChild(name);
+  info.appendChild(urlRow);
+  info.appendChild(actions);
+
+  card.appendChild(preview);
+  card.appendChild(info);
+
+  return card;
+}
+
+/* =========================================================
+   上傳
+   ========================================================= */
+
+document.getElementById("fileInput").addEventListener("change", event => {
+  handleFiles(Array.from(event.target.files));
+  event.target.value = "";
+});
+
+function setupDragAndDrop() {
+  const dropZone = document.getElementById("dropZone");
+
+  ["dragenter", "dragover"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+      event.preventDefault();
+      event.stopPropagation();
+      dropZone.classList.add("dragover");
+    });
+  });
+
+  ["dragleave", "drop"].forEach(eventName => {
+    dropZone.addEventListener(eventName, event => {
+      event.preventDefault();
+      event.stopPropagation();
+      dropZone.classList.remove("dragover");
+    });
+  });
+
+  dropZone.addEventListener("drop", event => {
+    const files = Array.from(event.dataTransfer.files);
+    handleFiles(files);
+  });
+}
+
+async function handleFiles(files) {
+  if (!files.length) return;
+
+  if (!getToken()) {
+    showToast("請先設定 GitHub Token", "error");
+    return;
+  }
+
+  const validFiles = [];
+  const invalidFiles = [];
+
+  files.forEach(file => {
+    const ext = getExtension(file.name);
+
+    if (ALLOWED_EXTENSIONS.includes(ext)) {
+      validFiles.push(file);
+    } else {
+      invalidFiles.push(file.name);
+    }
+  });
+
+  if (invalidFiles.length) {
+    showToast(
+      `忽略 ${invalidFiles.length} 個不支援的檔案`,
+      "error"
+    );
+  }
+
+  if (!validFiles.length) return;
+
+  const list = document.getElementById("uploadList");
+  list.style.display = "block";
+
+  for (const file of validFiles) {
+    await uploadFile(file);
+  }
+
+  await loadFiles();
+}
+
+/* =========================================================
+   單檔上傳
+   ========================================================= */
+
+async function uploadFile(file) {
+  const list = document.getElementById("uploadList");
+
+  const item = document.createElement("div");
+  item.className = "upload-item";
+
+  const top = document.createElement("div");
+  top.className = "upload-item-top";
+
+  const name = document.createElement("div");
+  name.className = "upload-name";
+  name.textContent = file.name;
+  name.title = file.name;
+
+  const status = document.createElement("div");
+  status.className = "status loading";
+  status.textContent = "處理中...";
+
+  top.appendChild(name);
+  top.appendChild(status);
+
+  const progress = document.createElement("div");
+  progress.className = "progress";
+
+  const bar = document.createElement("div");
+  bar.className = "progress-bar";
+
+  progress.appendChild(bar);
+
+  item.appendChild(top);
+  item.appendChild(progress);
+
+  list.prepend(item);
+
+  try {
+    bar.style.width = "20%";
+
+    const base64 = await fileToBase64(file);
+
+    bar.style.width = "55%";
+
+    const path = file.name;
+
+    const payload = {
+      message: `Upload ${file.name}`,
+      content: base64,
+      branch: GITHUB_BRANCH
+    };
+
+    /*
+      PUT /repos/{owner}/{repo}/contents/{path}
+    */
+    await githubRequest(
+      `${API_BASE}/${encodePath(path)}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      }
+    );
+
+    bar.style.width = "100%";
+
+    status.className = "status success";
+    status.textContent = "✓ 上傳成功";
+
+    showToast(`${file.name} 上傳成功`, "success");
+
+  } catch (error) {
+    bar.style.width = "100%";
+
+    status.className = "status error";
+    status.textContent = "✕ 上傳失敗";
+
+    showToast(
+      `${file.name}：${error.message}`,
+      "error"
+    );
+  }
+}
+
+/* =========================================================
+   Base64
+   ========================================================= */
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const result = reader.result;
+
+      /*
+        result 格式：
+        data:image/png;base64,xxxxxx
+      */
+
+      const base64 = String(result).split(",")[1];
+
+      if (!base64) {
+        reject(new Error("無法轉換檔案"));
+        return;
+      }
+
+      resolve(base64);
+    };
+
+    reader.onerror = () => {
+      reject(new Error("讀取檔案失敗"));
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+/* =========================================================
+   刪除
+   ========================================================= */
+
+async function deleteFile(file) {
+  const confirmed = confirm(
+    `確定要刪除「${file.name}」嗎？\n\n這會直接從 GitHub Repository 移除檔案。`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await githubRequest(
+      `${API_BASE}/${encodePath(file.path)}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          message: `Delete ${file.name}`,
+          sha: file.sha,
+          branch: GITHUB_BRANCH
+        })
+      }
+    );
+
+    showToast(`${file.name} 已刪除`, "success");
+
+    await loadFiles();
+
+  } catch (error) {
+    showToast(
+      `刪除失敗：${error.message}`,
+      "error"
+    );
+  }
+}
+
+/* =========================================================
+   工具函式
+   ========================================================= */
+
+function getExtension(filename) {
+  const parts = filename.toLowerCase().split(".");
+  return parts.length > 1 ? parts.pop() : "";
+}
+
+function encodePath(path) {
+  return path
+    .split("/")
+    .map(part => encodeURIComponent(part))
+    .join("/");
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard &&
+        window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+
+    const success = document.execCommand("copy");
+
+    textarea.remove();
+
+    return success;
+
+  } catch {
+    return false;
+  }
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
+}
+</script>
+
+</body>
+</html>
